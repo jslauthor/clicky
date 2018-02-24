@@ -23,6 +23,26 @@ KP8e0P6Ezn9X2488MvLnW75vwP2wCr8J5eD4upsxaHZzOwNNZcU2c3FfwWg1cDuISfIxH6fzedE8G90s
 8nuXH8B0eoXNc/6tQjsQfXaQz0/BEXUD3W4oF0hQPflTlJwZIl+FcOp86e2vvoj1Le6I/P974ZA2dBXk
 97qQ13Z8+3PS0+AdjKa1R95YOZgAAAABJRU5ErkJggg==`;
 
+const audioKeysAndLengths = {
+  kd: 5,
+  ku: 5,
+  md: 5, 
+  mu: 5
+};
+
+const keys = Object.keys(audioKeysAndLengths)
+  .reduce(
+    (all, key: string) => {
+      for (const x = 1; x <= audioKeysAndLengths[key]; x++) {
+        all.push(`${key.toUpperCase}-${x}.mp3`);
+      }
+      return all;
+    },
+    [] 
+  );
+
+console.log(keys)
+
 const handleInput = () => {
   console.log(contextMenu.items[0].checked);
   mainWindow.webContents.send('play', format({
@@ -31,6 +51,8 @@ const handleInput = () => {
     slashes: true
   }));
 };
+
+
 
 app.on('ready', async () => {
 
