@@ -1,5 +1,5 @@
 const { format } = require('url');
-
+// const ioHook = require('iohook');
 const { BrowserWindow, app, Tray, Menu, nativeImage } = require('electron');
 const isDev = require('electron-is-dev');
 const { resolve } = require('app-root-path');
@@ -30,29 +30,29 @@ const audioKeysAndLengths = {
   mu: 5
 };
 
+const random = (min, max) => Math.floor(Math.random()*(max-min+1)+min);
+
 const keys = Object.keys(audioKeysAndLengths)
   .reduce(
-    (all, key: string) => {
-      for (const x = 1; x <= audioKeysAndLengths[key]; x++) {
-        all.push(`${key.toUpperCase}-${x}.mp3`);
+    (all, key) => {
+      for (let x = 1; x <= audioKeysAndLengths[key]; x++) {
+        all[key] = all[key] || [];
+        all[key].push(`${key.toUpperCase()}-${x}.mp3`);
       }
       return all;
     },
     [] 
   );
 
-console.log(keys)
-
-const handleInput = () => {
-  console.log(contextMenu.items[0].checked);
+const handleInput = (type) => () => {
   mainWindow.webContents.send('play', format({
-    pathname: resolve('app/assets/KD-1.mp3'),
+    pathname: resolve(`app/assets/${keys[type][random(0,4)]}`),
     protocol: 'file:',
     slashes: true
   }));
 };
 
-
+// ioHook.on("keyup", handleInput('ku'));
 
 app.on('ready', async () => {
 
@@ -60,7 +60,7 @@ app.on('ready', async () => {
   tray = new Tray(icon);
   tray.setToolTip('Smooth, clean keyboard click emulation for the most prodigious screencasters.');
   contextMenu = Menu.buildFromTemplate([
-    {label: 'Emulate Clicks', type: 'checkbox', click: handleInput},
+    {label: 'Emulate Clicks', type: 'checkbox', click: handleInput('kd')},
     {label: 'Exit', type: 'normal', click: app.quit}
   ]);
   tray.setContextMenu(contextMenu);
@@ -90,6 +90,8 @@ app.on('ready', async () => {
 
   mainWindow.setMenu(null);
   mainWindow.loadURL(url);
+  //Register and start hook
+  // ioHook.start();
 });
 
 app.on('window-all-closed', app.quit);
