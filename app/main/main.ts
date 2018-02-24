@@ -1,5 +1,5 @@
 const { format } = require('url');
-// const ioHook = require('iohook');
+const ioHook = require('iohook');
 const { BrowserWindow, app, Tray, Menu, nativeImage } = require('electron');
 const isDev = require('electron-is-dev');
 const { resolve } = require('app-root-path');
@@ -52,7 +52,7 @@ const handleInput = (type) => () => {
   }));
 };
 
-// ioHook.on("keyup", handleInput('ku'));
+ioHook.on("keyup", handleInput('ku'));
 
 app.on('ready', async () => {
 
@@ -60,7 +60,7 @@ app.on('ready', async () => {
   tray = new Tray(icon);
   tray.setToolTip('Smooth, clean keyboard click emulation for the most prodigious screencasters.');
   contextMenu = Menu.buildFromTemplate([
-    {label: 'Emulate Clicks', type: 'checkbox', click: handleInput('kd')},
+    {label: 'Emulate Clicks', type: 'checkbox'},
     {label: 'Exit', type: 'normal', click: app.quit}
   ]);
   tray.setContextMenu(contextMenu);
@@ -91,7 +91,7 @@ app.on('ready', async () => {
   mainWindow.setMenu(null);
   mainWindow.loadURL(url);
   //Register and start hook
-  // ioHook.start();
+  ioHook.start();
 });
 
 app.on('window-all-closed', app.quit);
