@@ -11,3 +11,10 @@ const render = (Component) => {
 };
 
 render(Router);
+
+declare const window: any;
+window.ipcRenderer.on('play', (event, message) => {
+  console.log(event, message);
+  const audio = new Audio(message);
+  audio.play();
+});
