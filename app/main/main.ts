@@ -45,14 +45,19 @@ const keys = Object.keys(audioKeysAndLengths)
   );
 
 const handleInput = (type) => () => {
-  mainWindow.webContents.send('play', format({
-    pathname: resolve(`app/assets/${keys[type][random(0,4)]}`),
-    protocol: 'file:',
-    slashes: true
-  }));
+  if (contextMenu.items[0].checked) {
+    mainWindow.webContents.send('play', format({
+      pathname: resolve(`app/assets/${keys[type][random(0,4)]}`),
+      protocol: 'file:',
+      slashes: true
+    }));
+  }
 };
 
 ioHook.on("keyup", handleInput('ku'));
+ioHook.on("keydown", handleInput('kd'));
+ioHook.on("mouseup", handleInput('mu'));
+ioHook.on("mousedown", handleInput('md'));
 
 app.on('ready', async () => {
 
